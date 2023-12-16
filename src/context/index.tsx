@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactNode, useReducer } from 'react';
+import { createContext, Dispatch, ReactNode, useMemo, useReducer } from 'react';
 
 import { MainState, MainAction, mainReducer } from './reducers/main';
 
@@ -25,10 +25,13 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{
-        main: mainState,
-        mainDispatch: mainDispatch,
-      }}
+      value={useMemo(
+        () => ({
+          main: mainState,
+          mainDispatch: mainDispatch,
+        }),
+        [mainState, mainDispatch]
+      )}
     >
       {children}
     </AppContext.Provider>

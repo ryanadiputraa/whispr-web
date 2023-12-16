@@ -6,10 +6,19 @@ export interface JWTTokens {
   access_token: string;
 }
 
-export function useAuth(): JWTTokens | null {
-  const reqCookies = getCookie('auth');
-  if (!reqCookies) return null;
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
 
-  const jwtTokens: JWTTokens = JSON.parse(reqCookies);
-  return jwtTokens;
+export function useAuth() {
+  let jwtTokens: JWTTokens = {
+    access_token: '',
+  };
+  const reqCookies = getCookie('auth');
+  if (reqCookies) {
+    jwtTokens = JSON.parse(reqCookies);
+  }
+
+  return { jwtTokens };
 }

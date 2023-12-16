@@ -7,13 +7,13 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function Auth(Component: any) {
   return function Auth(props: any) {
-    const auth = useAuth();
+    const { jwtTokens } = useAuth();
 
     useEffect(() => {
-      if (!auth) {
+      if (!jwtTokens.access_token) {
         redirect('/login');
       }
-    }, [auth]);
+    }, [jwtTokens.access_token]);
 
     return <Component {...props} />;
   };
