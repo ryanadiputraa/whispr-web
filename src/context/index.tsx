@@ -6,7 +6,13 @@ interface IInitialState {
   main: MainState;
 }
 const initialState: IInitialState = {
-  main: {},
+  main: {
+    toast: {
+      isOpen: false,
+      type: 'INFO',
+      message: '',
+    },
+  },
 };
 
 const AppContext = createContext<{

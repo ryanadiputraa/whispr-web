@@ -11,7 +11,7 @@ export default function Auth(Component: any) {
 
     useEffect(() => {
       if (!jwtTokens.access_token) {
-        redirect('/login');
+        redirect('/dashboard/login');
       }
     }, [jwtTokens.access_token]);
 
