@@ -4,6 +4,8 @@ Silent meet web application. Using websocket to collaborate ideas on realtime in
 
 ## Development
 
+Adjust your `.env.development` file
+
 install dependencies:
 
 ```bash
