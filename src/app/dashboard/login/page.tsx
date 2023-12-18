@@ -24,8 +24,8 @@ export default function Login(): React.ReactNode {
     const resp = await login(payload);
     setIsLoading(false);
 
-    if (resp.errors) {
-      setErrors(resp.errors);
+    if (resp.message) {
+      setErrors(resp.errors ?? errors);
       return;
     }
 

@@ -3,7 +3,7 @@
 import { getCookie, setCookie } from 'cookies-next';
 
 import { useMainAction } from '@/context/actions/main';
-import axios, { DataAPIResponse } from '@/lib/axios';
+import axios, { DataAPIResponse, ErrorAPIResponse } from '@/lib/axios';
 import { catchAxiosError } from '@/utils/error';
 
 export interface JWTTokens {
@@ -15,12 +15,11 @@ export interface LoginPayload {
   password: string;
 }
 
-interface LoginResponse {
-  errors?: {
-    message?: string;
-    email?: string;
-    password?: string;
-  };
+export interface RegisterPayload {
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string;
 }
 
 export function useAuth() {
@@ -38,22 +37,28 @@ export function useAuth() {
     setCookie('auth', tokens);
   };
 
-  const login = async (payload: LoginPayload): Promise<LoginResponse> => {
+  const login = async (payload: LoginPayload): Promise<ErrorAPIResponse> => {
     try {
       const resp = await axios.post<DataAPIResponse<JWTTokens>>('/auth/login', payload);
       setJWTTokens(resp.data.data);
-      return { errors: undefined };
+      return { message: '', errors: {} };
     } catch (error) {
       const err = catchAxiosError(error);
       if (!err.errors) toggleToast({ isOpen: true, type: 'ERROR', message: err.message });
-      return {
-        errors: {
-          message: err.message,
-          ...err.errors,
-        },
-      };
+      return err;
     }
   };
 
-  return { jwtTokens, login };
+  const register = async (payload: RegisterPayload): Promise<ErrorAPIResponse> => {
+    try {
+      await axios.post('/auth/register', payload);
+      return { message: '', errors: {} };
+    } catch (error) {
+      const err = catchAxiosError(error);
+      if (!err.errors) toggleToast({ isOpen: true, type: 'ERROR', message: err.message });
+      return err;
+    }
+  };
+
+  return { jwtTokens, login, register };
 }
