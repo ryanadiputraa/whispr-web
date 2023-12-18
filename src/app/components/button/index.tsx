@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { CSSProperties, MouseEventHandler } from 'react';
 
 interface Props {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: CSSProperties;
   type?: 'submit' | 'reset' | 'button';
   variant?: 'PRIMARY' | 'SECONDARY' | 'ACCENT';
@@ -25,14 +25,14 @@ export function Button({
   const variatnStyle = {
     PRIMARY: 'bg-background-dark text-text-dark',
     SECONDARY: 'bg-background text-text border-2 border-background-dark',
-    ACCENT: 'bg-accent text-text-dark',
+    ACCENT: 'bg-accent dark:bg-accent-dark text-text-dark dark:text-text',
   };
 
   return (
     <button
       style={style}
       type={type}
-      className={`${variatnStyle[variant]} px-4 py-2 grid place-items-center rounded-3xl ${classNames}`}
+      className={`${variatnStyle[variant]} px-4 py-2 flex justify-center items-center rounded-3xl active:scale-95 active:brightness-95 ${classNames}`}
       onClick={onClick}
       disabled={disabled}
     >

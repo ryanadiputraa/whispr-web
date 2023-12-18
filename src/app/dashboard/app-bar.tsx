@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useContext } from 'react';
 
 import { AppContext } from '@/context';
@@ -12,16 +11,12 @@ export function AppBar(): React.ReactNode {
   const { state } = useTheme();
 
   return (
-    <header className="flex items-center justify-between py-4 px-[2%] sm:px-8">
-      <Link href={'/dashboard'} className="flex items-center gap-4">
-        <Image
-          width={24}
-          height={24}
-          src={state === 'dark' ? '/img/whispr.png' : 'img/whispr-black.png'}
-          alt="whispr"
-        />
-        <h1 className="font-bold text-lg">Whispr</h1>
-      </Link>
+    <header className="flex items-center justify-between py-4 px-[4%] sm:px-8">
+      <span className="hidden sm:inline-block text-sm">Hello, {user.data.firstName}</span>
+      {/* TODO: mobile nav */}
+      <button className="inline-block sm:hidden">
+        <Image width={28} height={28} src={state === 'dark' ? '/img/menu.png' : '/img/menu-black.png'} alt="menu" />
+      </button>
       <div>
         {user.data.id && (
           <div className={`flex w-9 h-9  rounded-full bg-accent dark:bg-accent-dark text-text-dark dark:text-text`}>

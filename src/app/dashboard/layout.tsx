@@ -4,6 +4,7 @@ import { AppProvider } from '@/context';
 import { Toast } from '../components/toast';
 import { AppBar } from './app-bar';
 import Auth from './auth';
+import SideBar from './side-bar';
 import DashboardWrapper from './wrapper';
 
 function DashboardLayout({
@@ -14,8 +15,13 @@ function DashboardLayout({
   return (
     <AppProvider>
       <DashboardWrapper>
-        <AppBar />
-        <main className="py-4 px-[2%] sm:px-8">{children}</main>
+        <main className="flex">
+          <SideBar />
+          <div className="grow">
+            <AppBar />
+            <div className="py-4 px-[4%] sm:px-8">{children}</div>
+          </div>
+        </main>
         <Toast />
       </DashboardWrapper>
     </AppProvider>
