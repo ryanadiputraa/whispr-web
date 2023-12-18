@@ -2,10 +2,10 @@ import Image from 'next/image';
 import { CSSProperties, MouseEventHandler } from 'react';
 
 interface Props {
+  children: React.ReactNode;
   style?: CSSProperties;
   type?: 'submit' | 'reset' | 'button';
-  variant?: 'PRIMARY' | 'SECONDARY';
-  text: string;
+  variant?: 'PRIMARY' | 'SECONDARY' | 'ACCENT';
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   isLoading?: boolean;
@@ -13,10 +13,10 @@ interface Props {
 }
 
 export function Button({
+  children,
   style,
   type,
   variant = 'PRIMARY',
-  text,
   onClick,
   disabled = false,
   isLoading = false,
@@ -25,6 +25,7 @@ export function Button({
   const variatnStyle = {
     PRIMARY: 'bg-background-dark text-text-dark',
     SECONDARY: 'bg-background text-text border-2 border-background-dark',
+    ACCENT: 'bg-accent text-text-dark',
   };
 
   return (
@@ -36,7 +37,7 @@ export function Button({
       disabled={disabled}
     >
       {!isLoading ? (
-        text
+        children
       ) : (
         <Image className="animate-spin" width={24} height={24} src={'/img/loader.png'} alt="loader" />
       )}

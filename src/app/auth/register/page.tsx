@@ -123,12 +123,13 @@ export default function Register(): React.ReactNode {
           )}
           <Button
             type="submit"
-            text="Register"
             classNames="mt-8"
             disabled={isLoading}
             isLoading={isLoading}
             style={{ paddingTop: '0.75rem', paddingBottom: '0.75rem' }}
-          />
+          >
+            Register
+          </Button>
         </form>
         <span className="self-end mt-12">
           Already have an account?{' '}

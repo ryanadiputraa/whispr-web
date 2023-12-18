@@ -68,12 +68,13 @@ export default function Login(): React.ReactNode {
           {errors?.password && <span className="text-sm text-red-600 self-start">{errors.password}</span>}
           <Button
             type="submit"
-            text="Login"
             classNames="mt-8"
             disabled={isLoading}
             isLoading={isLoading}
             style={{ paddingTop: '0.75rem', paddingBottom: '0.75rem' }}
-          />
+          >
+            Login
+          </Button>
         </form>
         <span className="self-end mt-12">
           Don&apos;t have account?{' '}
