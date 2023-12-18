@@ -6,13 +6,15 @@ import { AppContext } from '@/context';
 import { useMainAction } from '@/context/actions/main';
 import { Icon } from './icon';
 
+const TOAST_TIMEOUT = 5000;
+
 export function Toast() {
   const { main } = useContext(AppContext);
   const { toggleToast } = useMainAction();
 
   useLayoutEffect(() => {
     if (!main.toast.isOpen) return;
-    const t = setTimeout(() => toggleToast(), 3000);
+    const t = setTimeout(() => toggleToast(), TOAST_TIMEOUT);
     return () => clearTimeout(t);
   }, [main.toast.isOpen]);
 
