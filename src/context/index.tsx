@@ -56,7 +56,7 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           user: userState,
           userDispatch: userDispatch,
         }),
-        [mainState, mainDispatch]
+        [mainState, mainDispatch, userState, userDispatch]
       )}
     >
       {children}
