@@ -6,6 +6,12 @@ export const mainReducer = (state: MainState, action: MainAction) => {
         toast: action.data,
       };
 
+    case 'TOGGLE_THEME':
+      return {
+        ...state,
+        theme: state.theme === 'dark' ? 'light' : 'dark',
+      };
+
     default:
       return { ...state };
   }
@@ -19,6 +25,7 @@ export interface Toast {
 
 export interface MainState {
   toast: Toast;
+  theme: string;
 }
 
-export type MainAction = { type: 'TOGGLE_TOAST'; data: Toast };
+export type MainAction = { type: 'TOGGLE_THEME' } | { type: 'TOGGLE_TOAST'; data: Toast };

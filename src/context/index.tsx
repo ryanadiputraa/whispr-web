@@ -1,14 +1,20 @@
+'use client';
+
 import { createContext, Dispatch, ReactNode, useMemo, useReducer } from 'react';
 
 import { MainState, MainAction, mainReducer } from './reducers/main';
 import { UserAction, userReducer, UserState } from './reducers/user';
 
-interface IInitialState {
+interface InitialState {
   main: MainState;
   user: UserState;
 }
-const initialState: IInitialState = {
+
+const defaultTheme = typeof window !== 'undefined' ? window.localStorage.getItem('theme') : 'dark';
+
+const initialState: InitialState = {
   main: {
+    theme: defaultTheme ?? 'dark',
     toast: {
       isOpen: false,
       type: 'INFO',

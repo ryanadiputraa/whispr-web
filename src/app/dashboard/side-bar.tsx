@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
-import { useTheme } from '@/hooks/useTheme';
+import { AppContext } from '@/context';
 import { Button } from '../components/button';
 
 const MENU_LIST = [
@@ -24,17 +24,17 @@ const MENU_LIST = [
 ];
 
 export default function SideBar() {
-  const { state } = useTheme();
+  const { main } = useContext(AppContext);
   const pathname = usePathname();
   const [active, setActive] = useState<string>(pathname);
 
   return (
-    <nav className="hidden sm:inline-block w-56 h-screen shadow-sm shadow-secondary sm:shadow-secondary-dark py-4">
+    <nav className="hidden sm:inline-block w-56 h-screen shadow-sm shadow-secondary-dark dark:shadow-secondary sm:shadow-secondary-dark py-4">
       <Link href={'/dashboard'} className="flex justify-center items-center gap-4">
         <Image
           width={24}
           height={24}
-          src={state === 'dark' ? '/img/whispr.png' : 'img/whispr-black.png'}
+          src={main.theme === 'dark' ? '/img/whispr.png' : '/img/whispr-black.png'}
           alt="whispr"
         />
         <h1 className="font-bold text-lg">Whispr</h1>
@@ -57,7 +57,7 @@ export default function SideBar() {
               href={menu.href}
               onClick={() => setActive(menu.href)}
             >
-              <Image width={16} height={16} src={state === 'dark' ? menu.icoDark : menu.ico} alt={menu.name} />
+              <Image width={16} height={16} src={main.theme === 'dark' ? menu.icoDark : menu.ico} alt={menu.name} />
               {menu.name}
             </Link>
           </li>

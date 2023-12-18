@@ -4,18 +4,21 @@ import Image from 'next/image';
 import { useContext } from 'react';
 
 import { AppContext } from '@/context';
-import { useTheme } from '@/hooks/useTheme';
 
 export function AppBar(): React.ReactNode {
-  const { user } = useContext(AppContext);
-  const { state } = useTheme();
+  const { main, user } = useContext(AppContext);
 
   return (
     <header className="flex items-center justify-between py-4 px-[4%] sm:px-8">
       <span className="hidden sm:inline-block text-sm">Hello, {user.data.firstName}</span>
       {/* TODO: mobile nav */}
       <button className="inline-block sm:hidden">
-        <Image width={28} height={28} src={state === 'dark' ? '/img/menu.png' : '/img/menu-black.png'} alt="menu" />
+        <Image
+          width={28}
+          height={28}
+          src={main.theme === 'dark' ? '/img/menu.png' : '/img/menu-black.png'}
+          alt="menu"
+        />
       </button>
       <div>
         {user.data.id && (
