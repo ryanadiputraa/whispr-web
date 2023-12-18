@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 
+type State = 'dark' | 'light';
+
 interface Theme {
-  state: string;
+  state: State;
   toggleTheme: () => void;
 }
 
 export function useTheme(): Theme {
-  const [state, setState] = useState<string>('dark');
+  const [state, setState] = useState<State>('dark');
 
   const toggleTheme = () => {
     const html = document.querySelector('html');
