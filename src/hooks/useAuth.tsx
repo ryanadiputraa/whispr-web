@@ -34,7 +34,10 @@ export function useAuth() {
   }
 
   const setJWTTokens = (tokens: JWTTokens) => {
-    setCookie('auth', tokens);
+    const now = new Date();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const expiresTime = new Date(now.getTime() + oneDay);
+    setCookie('auth', tokens, { expires: expiresTime });
   };
 
   const login = async (payload: LoginPayload): Promise<ErrorAPIResponse> => {
