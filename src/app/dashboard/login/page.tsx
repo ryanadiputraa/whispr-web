@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
@@ -33,11 +34,12 @@ export default function Login(): React.ReactNode {
 
   return (
     <div className="w-full min-h-screen grid place-items-center bg-background-dark">
-      <div className="flex flex-col items-center bg-background text-text px-6 sm:px-12 pt-8 pb-12 rounded-lg max-w-xl w-11/12 text-center">
+      <div className="flex flex-col items-center bg-background text-text px-6 sm:px-12 py-8 rounded-lg max-w-xl w-11/12 text-center">
         <span className="font-bold text-xl sm:text-3xl">Sign In</span>
         <p className="text-xs sm:text-base">Start your silent meeting session</p>
         <form className="relative mt-8 flex flex-col w-full" onSubmit={onSubmit}>
           <TextField
+            type="email"
             classNames={`w-full ${!errors?.email ? 'mb-5' : ''}`}
             placeholder="Email"
             required
@@ -51,6 +53,7 @@ export default function Login(): React.ReactNode {
           />
           {errors?.email && <span className="text-sm text-red-600 self-start">{errors.email}</span>}
           <TextField
+            type="password"
             classNames={`w-full mt-4 ${!errors?.password ? 'mb-5' : ''}`}
             placeholder="Password"
             required
@@ -72,6 +75,13 @@ export default function Login(): React.ReactNode {
             style={{ paddingTop: '0.75rem', paddingBottom: '0.75rem' }}
           />
         </form>
+        <span className="self-end mt-12">
+          Don't have account?{' '}
+          <Link className="text-blue-700 font-bold" href={'/dashboard/register'}>
+            Register
+          </Link>{' '}
+          now
+        </span>
       </div>
     </div>
   );

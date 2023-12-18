@@ -1,6 +1,7 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, HTMLInputTypeAttribute } from 'react';
 
 interface Props {
+  type?: HTMLInputTypeAttribute;
   placeholder: string;
   value?: string | number | readonly string[];
   onChange?: ChangeEventHandler<HTMLInputElement>;
@@ -8,12 +9,12 @@ interface Props {
   classNames?: string;
 }
 
-export function TextField({ placeholder, value, onChange, required = false, classNames }: Readonly<Props>) {
+export function TextField({ type, placeholder, value, onChange, required = false, classNames }: Readonly<Props>) {
   return (
     <input
+      type={type}
       required={required}
       className={`p-2 bg-transparent border-b-2 border-background-dark focus:outline-none ${classNames}`}
-      type="text"
       placeholder={placeholder}
       value={value}
       onChange={onChange}
