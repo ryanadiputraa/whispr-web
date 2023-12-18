@@ -76,7 +76,7 @@ export default function Login(): React.ReactNode {
           />
         </form>
         <span className="self-end mt-12">
-          Don't have account?{' '}
+          Don&apos;t have account?{' '}
           <Link className="text-blue-700 font-bold" href={'/dashboard/register'}>
             Register
           </Link>{' '}

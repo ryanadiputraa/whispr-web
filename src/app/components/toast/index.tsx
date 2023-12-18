@@ -16,7 +16,7 @@ export function Toast() {
     if (!main.toast.isOpen) return;
     const t = setTimeout(() => toggleToast(), TOAST_TIMEOUT);
     return () => clearTimeout(t);
-  }, [main.toast.isOpen]);
+  }, [main.toast.isOpen, toggleToast]);
 
   return (
     <div

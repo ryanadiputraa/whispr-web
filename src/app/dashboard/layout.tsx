@@ -3,16 +3,22 @@
 import { AppProvider } from '@/context';
 
 import { Toast } from '../components/toast';
+import Auth from './auth';
+import DashboardWrapper from './wrapper';
 
-export default function dashboardLayout({
+function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <AppProvider>
-      <main>{children}</main>
-      <Toast />
+      <DashboardWrapper>
+        <main>{children}</main>
+        <Toast />
+      </DashboardWrapper>
     </AppProvider>
   );
 }
+
+export default Auth(DashboardLayout);
