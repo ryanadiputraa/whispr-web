@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 
 import { AppContext } from '@/context';
 import { Button } from '../components/button';
@@ -26,7 +26,12 @@ const MENU_LIST = [
 export default function SideBar() {
   const { main } = useContext(AppContext);
   const pathname = usePathname();
+  const [isMount, setIsMount] = useState(false);
   const [active, setActive] = useState<string>(pathname);
+
+  useLayoutEffect(() => {
+    setIsMount(true);
+  }, [setIsMount]);
 
   return (
     <nav className="hidden sm:inline-block w-56 h-screen shadow-sm shadow-secondary-dark dark:shadow-secondary sm:shadow-secondary-dark py-4">
@@ -34,7 +39,7 @@ export default function SideBar() {
         <Image
           width={24}
           height={24}
-          src={main.theme === 'dark' ? '/img/whispr.png' : '/img/whispr-black.png'}
+          src={isMount && main.theme === 'light' ? '/img/whispr-black.png' : '/img/whispr.png'}
           alt="whispr"
         />
         <h1 className="font-bold text-lg">Whispr</h1>
@@ -57,7 +62,13 @@ export default function SideBar() {
               href={menu.href}
               onClick={() => setActive(menu.href)}
             >
-              <Image width={16} height={16} src={main.theme === 'dark' ? menu.icoDark : menu.ico} alt={menu.name} />
+              <Image
+                priority
+                width={16}
+                height={16}
+                src={isMount && main.theme === 'light' ? menu.ico : menu.icoDark}
+                alt={menu.name}
+              />
               {menu.name}
             </Link>
           </li>

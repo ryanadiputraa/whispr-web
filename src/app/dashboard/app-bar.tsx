@@ -1,12 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useContext } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 
 import { AppContext } from '@/context';
 
 export function AppBar(): React.ReactNode {
   const { main, user } = useContext(AppContext);
+  const [isMount, setIsMount] = useState(false);
+
+  useLayoutEffect(() => {
+    setIsMount(true);
+  }, [setIsMount]);
 
   return (
     <header className="flex items-center justify-between py-4 px-[4%] sm:px-8">
@@ -16,7 +21,7 @@ export function AppBar(): React.ReactNode {
         <Image
           width={28}
           height={28}
-          src={main.theme === 'dark' ? '/img/menu.png' : '/img/menu-black.png'}
+          src={isMount && main.theme === 'light' ? '/img/menu-black.png' : '/img/menu.png'}
           alt="menu"
         />
       </button>
