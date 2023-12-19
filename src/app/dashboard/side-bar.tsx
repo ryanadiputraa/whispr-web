@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useContext, useLayoutEffect, useState } from 'react';
 
 import { AppContext } from '@/context';
+import { useMeet } from '@/hooks/useMeet';
 import { Button } from '../components/button';
 
 const MENU_LIST = [
@@ -26,8 +27,18 @@ const MENU_LIST = [
 export default function SideBar() {
   const { main } = useContext(AppContext);
   const pathname = usePathname();
+  const { createMeetingSession } = useMeet();
   const [isMount, setIsMount] = useState(false);
   const [active, setActive] = useState<string>(pathname);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onNewMeeting = async () => {
+    setIsLoading(true);
+    const sessionId = await createMeetingSession();
+    if (sessionId) console.log(sessionId);
+    setIsLoading(false);
+    // TODO: connect to websocket
+  };
 
   useLayoutEffect(() => {
     setIsMount(true);
@@ -44,7 +55,12 @@ export default function SideBar() {
         />
         <h1 className="font-bold text-lg">Whispr</h1>
       </Link>
-      <Button variant="ACCENT" classNames="rounded-md flex gap-2 mt-12 mx-auto py-3 px-6 font-medium">
+      <Button
+        variant="ACCENT"
+        classNames="rounded-md flex gap-2 mt-12 mx-auto py-3 px-6 font-medium"
+        isLoading={isLoading}
+        onClick={onNewMeeting}
+      >
         <span className=" scale-150">+</span> New Meeting
       </Button>
       <ul className="mt-12">
