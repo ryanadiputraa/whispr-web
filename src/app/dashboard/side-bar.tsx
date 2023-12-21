@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useLayoutEffect, useState } from 'react';
 
 import { AppContext } from '@/context';
@@ -27,7 +27,9 @@ const MENU_LIST = [
 export default function SideBar() {
   const { main } = useContext(AppContext);
   const pathname = usePathname();
+  const router = useRouter();
   const { createMeetingSession } = useMeet();
+
   const [isMount, setIsMount] = useState(false);
   const [active, setActive] = useState<string>(pathname);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,9 +37,8 @@ export default function SideBar() {
   const onNewMeeting = async () => {
     setIsLoading(true);
     const sessionId = await createMeetingSession();
-    if (sessionId) console.log(sessionId);
     setIsLoading(false);
-    // TODO: connect to websocket
+    if (sessionId) router.push(`/${sessionId}`);
   };
 
   useLayoutEffect(() => {
