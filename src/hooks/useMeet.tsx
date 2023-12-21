@@ -1,7 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useMainAction } from '@/context/actions/main';
 import axios, { DataAPIResponse } from '@/lib/axios';
+import { socket } from '@/lib/socket';
 import { catchAxiosError } from '@/utils/error';
 import { useAuth } from './useAuth';
 
@@ -24,4 +27,14 @@ export function useMeet() {
   };
 
   return { createMeetingSession };
+}
+
+export function useConnection() {
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 }

@@ -25,7 +25,7 @@ const MENU_LIST = [
 ];
 
 export default function SideBar() {
-  const { main } = useContext(AppContext);
+  const { main, user } = useContext(AppContext);
   const pathname = usePathname();
   const router = useRouter();
   const { createMeetingSession } = useMeet();
@@ -38,7 +38,7 @@ export default function SideBar() {
     setIsLoading(true);
     const sessionId = await createMeetingSession();
     setIsLoading(false);
-    if (sessionId) router.push(`/${sessionId}`);
+    if (sessionId) router.push(`/${sessionId}?username=${user.data.id}`);
   };
 
   useLayoutEffect(() => {

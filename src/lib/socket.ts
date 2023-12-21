@@ -8,6 +8,8 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   msg: (data: { msg: string }) => void;
+  join: (data: { roomId: string; userId: string }) => void;
+  leave: (data: { roomId: string; userId: string }) => void;
 }
 
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(URL);
