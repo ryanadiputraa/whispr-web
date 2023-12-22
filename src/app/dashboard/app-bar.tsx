@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useContext, useLayoutEffect, useState } from 'react';
 
 import { AppContext } from '@/context';
+import { Avatar } from '../components/avatar';
 
 export function AppBar(): React.ReactNode {
   const { main, user } = useContext(AppContext);
@@ -25,13 +26,7 @@ export function AppBar(): React.ReactNode {
           alt="menu"
         />
       </button>
-      <div>
-        {user.data.id && (
-          <div className={`flex w-9 h-9  rounded-full bg-accent dark:bg-accent-dark text-text-dark dark:text-text`}>
-            <span className="m-auto font-bold">{user.data.firstName[0] + user.data.lastName[0]}</span>
-          </div>
-        )}
-      </div>
+      <div>{user.data.id && <Avatar firstName={user.data.firstName} lastName={user.data.lastName} />}</div>
     </header>
   );
 }
