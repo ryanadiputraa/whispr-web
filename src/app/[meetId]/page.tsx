@@ -57,10 +57,6 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
   }, [setIsMount, isJoined, searchParams.username]);
 
   useEffect(() => {
-    console.log('connecting...');
-    console.log(username);
-    console.log(params.meetId);
-
     if (!username) return;
     const handleError = ({ message }: { message: string }) => {
       setError({ message });
@@ -74,8 +70,6 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
 
     joinSession();
     socket.on('joined', ({ isModerator }: { isModerator: boolean }) => {
-      console.log('join');
-
       setIsJoined(true);
       setIsModerator(isModerator);
     });

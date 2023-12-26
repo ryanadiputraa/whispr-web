@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 
 import { Button } from '../components/button';
 import { TextField } from '../components/input';
@@ -14,7 +14,8 @@ interface Props {
 export function Prompt({ isOpen, setIsPromptOpen, setUsername }: Readonly<Props>) {
   const [value, setValue] = useState<string>();
 
-  const onJoin = () => {
+  const onJoin = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!value) return;
     setIsPromptOpen(false);
     setUsername(value);
