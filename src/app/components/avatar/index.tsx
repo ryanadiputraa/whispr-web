@@ -1,4 +1,4 @@
-export function Avatar({ firstName, lastName }: { firstName: string; lastName?: string }) {
+export function Avatar({ firstName, lastName }: Readonly<{ firstName?: string; lastName?: string }>) {
   const generateBackground = (name: string): string => {
     let hash = 0;
     let i;
@@ -22,10 +22,10 @@ export function Avatar({ firstName, lastName }: { firstName: string; lastName?: 
 
   return (
     <div
-      style={{ backgroundColor: generateBackground(firstName + lastName) }}
+      style={{ backgroundColor: generateBackground(firstName ?? '' + lastName) }}
       className={`flex w-9 h-9  rounded-full text-text-dark dark:text-text`}
     >
-      <span className="m-auto font-bold">{firstName[0] + lastName?.[0]}</span>
+      <span className="m-auto font-bold">{firstName?.[0] ?? '' + lastName?.[0]}</span>
     </div>
   );
 }

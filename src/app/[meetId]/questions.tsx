@@ -8,7 +8,7 @@ import { AppContext } from '@/context';
 import { Question } from '@/lib/socket';
 
 interface Props {
-  questions: Question[];
+  questions: { [id: string]: Question };
   selectedQuestion: Question | null;
   setSelectedQuestion: Dispatch<SetStateAction<Question | null>>;
 }
@@ -33,17 +33,17 @@ export function Questions({ questions, selectedQuestion, setSelectedQuestion }: 
         <h1 className="font-bold text-lg">Whispr</h1>
       </Link>
       <ul className="mt-12">
-        {questions.map((question) => (
+        {Object.keys(questions).map((id) => (
           <li
-            key={question.id}
+            key={id}
             className={
-              selectedQuestion?.id === question.id
+              selectedQuestion?.id === id
                 ? 'bg-gradient-to-r from-accent-transparent dark:from-accent-dark-transparent to-white border-l-2 border-accent dark:border-accent-dark'
                 : ''
             }
           >
-            <button className="inline-block truncate w-40 py-2 px-2" onClick={() => setSelectedQuestion(question)}>
-              {question.question}
+            <button className="inline-block truncate w-40 py-2 px-2" onClick={() => setSelectedQuestion(questions[id])}>
+              {questions[id].question}
             </button>
           </li>
         ))}

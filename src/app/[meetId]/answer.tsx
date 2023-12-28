@@ -8,7 +8,7 @@ interface Props {
   timestamp: string;
 }
 
-export function Answer({ username, answer, timestamp }: Props) {
+export function Answer({ username, answer, timestamp }: Readonly<Props>) {
   const [firstName, lastName] = username.split(' ');
 
   return (
