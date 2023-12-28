@@ -2,7 +2,9 @@
 
 import { format } from 'date-fns';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { FormEvent, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { AppContext } from '@/context';
 import { useMainAction } from '@/context/actions/main';
@@ -24,6 +26,8 @@ interface Props {
 export default function MeetSession({ params, searchParams }: Readonly<Props>) {
   const { main } = useContext(AppContext);
   const { toggleToast } = useMainAction();
+  const pathname = usePathname();
+  useConnection();
 
   const [username, setUsername] = useState(searchParams.username);
   const [isPromptUsername, setIsPromptUsername] = useState(false);
@@ -36,10 +40,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
   const [questions, setQuestions] = useState<{ [id: string]: Question }>({});
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(questions[0] ?? null);
 
-  useConnection();
-
   const onShare = () => {
-    // TODO: copy meet link
     toggleToast({ isOpen: true, type: 'INFO', message: 'Meet link copied!' });
   };
 
@@ -62,7 +63,6 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
     if (!username && !searchParams.username) {
       setIsPromptUsername(true);
     }
-
     const t = setTimeout(() => {
       if (!isJoined) setError({ message: "Can't join meeting session" });
     }, 5000);
@@ -170,25 +170,29 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
                 ))}
               </div>
             </div>
-            <form className="w-full flex justify-center items-center gap-4" onSubmit={onSubmit}>
-              <Button type="button" classNames="uppercase font-bold" variant="ACCENT" onClick={onShare}>
-                Share
-              </Button>
-              <TextField
-                classNames="w-full sm:w-1/2 border-solid border-text dark:border-secondary border-[0.1rem] border-b-[0.1rem] rounded-full px-6"
-                placeholder={isModerator ? 'Enter a question or topic...' : 'Enter your answer or opinion...'}
-                required
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-              <Button variant="SECONDARY" classNames="dark:bg-transparent dark:border-secondary">
-                <Image
-                  width={24}
-                  height={24}
-                  src={isMount && main.theme === 'light' ? '/img/send-black.png' : '/img/send.png'}
-                  alt="send"
+            {(isModerator || selectedQuestion?.id) && (
+              <form className="w-full flex justify-center items-center gap-4" onSubmit={onSubmit}>
+                <CopyToClipboard text={window.location.host + pathname} onCopy={onShare}>
+                  <Button type="button" classNames="uppercase font-bold" variant="ACCENT">
+                    Share
+                  </Button>
+                </CopyToClipboard>
+                <TextField
+                  classNames="w-full sm:w-1/2 border-solid border-text dark:border-secondary border-[0.1rem] border-b-[0.1rem] rounded-full px-6"
+                  placeholder={isModerator ? 'Enter a question or topic...' : 'Enter your answer or opinion...'}
+                  required
+                  onChange={(e) => setInputValue(e.target.value)}
                 />
-              </Button>
-            </form>
+                <Button variant="SECONDARY" classNames="dark:bg-transparent dark:border-secondary">
+                  <Image
+                    width={24}
+                    height={24}
+                    src={isMount && main.theme === 'light' ? '/img/send-black.png' : '/img/send.png'}
+                    alt="send"
+                  />
+                </Button>
+              </form>
+            )}
           </div>
         </>
       )}
