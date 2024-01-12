@@ -5,10 +5,8 @@ const URL = String(process.env.NEXT_PUBLIC_WS_URL);
 export interface Question {
   id: string;
   question: string;
-  answer?: {
-    [id: string]: Answer;
-  };
-  created_at: string;
+  responses?: Answer[];
+  createdAt: string;
 }
 
 export interface QuestionDTO {
@@ -20,8 +18,8 @@ export interface Answer {
   id: string;
   questionId: string;
   username: string;
-  answer: string;
-  created_at: string;
+  response: string;
+  createdAt: string;
 }
 
 export interface AnswerDTO {
@@ -33,7 +31,7 @@ export interface AnswerDTO {
 
 export interface ServerToClientEvents {
   error: (data: { message: string }) => void;
-  joined: (data: { isModerator: boolean }) => void;
+  joined: (data: { isModerator: boolean; questions: Question[] }) => void;
   question: (data: { question: Question }) => void;
   answer: (data: { answer: Answer }) => void;
 }

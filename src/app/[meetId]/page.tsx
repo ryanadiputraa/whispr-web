@@ -35,7 +35,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
   const [isJoined, setIsJoined] = useState<boolean>(false);
   const [isModerator, setIsModerator] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string } | null>(null);
-  const [inputValue, setInputValue] = useState<string>();
+  const [inputValue, setInputValue] = useState<string>('');
 
   const [questions, setQuestions] = useState<{ [id: string]: Question }>({});
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(questions[0] ?? null);
@@ -46,6 +46,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setInputValue('');
     if (isModerator) {
       socket.emit('question', { meetId: params.meetId, question: inputValue ?? '' });
     } else {
@@ -94,7 +95,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
         [answer.questionId]: {
           ...prev[answer.questionId],
           answer: {
-            ...prev[answer.questionId].answer,
+            ...prev[answer.questionId].responses,
             [answer.id]: answer,
           },
         },
@@ -104,7 +105,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
           ? {
               ...prev,
               answer: {
-                ...prev.answer,
+                ...prev.responses,
                 [answer.id]: answer,
               },
             }
@@ -113,9 +114,20 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
     };
 
     joinSession();
-    socket.on('joined', ({ isModerator }: { isModerator: boolean }) => {
+    socket.on('joined', ({ isModerator, questions }): void => {
       setIsJoined(true);
       setIsModerator(isModerator);
+      const data: { [id: string]: Question } = {};
+      if (questions.length) {
+        questions.forEach(
+          (question) =>
+            (data[question.id] = {
+              ...question,
+              responses: question.responses,
+            })
+        );
+      }
+      setQuestions(data);
     });
     socket.on('question', ({ question }) => handleQuestion(question));
     socket.on('answer', ({ answer }) => handleAnswer(answer));
@@ -155,17 +167,17 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
                 <div className="flex flex-col bg-accent-transparent dark:bg-accent-dark-transparent py-2 px-4 text-justify rounded-md">
                   <p>{selectedQuestion?.question}</p>
                   <span className="self-end">
-                    {selectedQuestion?.created_at ? format(selectedQuestion.created_at ?? '', 'HH:mm') : ''}
+                    {selectedQuestion?.createdAt ? format(selectedQuestion.createdAt ?? '', 'HH:mm') : ''}
                   </span>
                 </div>
               )}
               <div className="flex flex-col gap-8 mt-8 w-4/5 mx-auto">
-                {Object.keys(selectedQuestion?.answer ?? {}).map((id) => (
+                {selectedQuestion?.responses?.map((response) => (
                   <AnswerUI
-                    key={id}
-                    username={selectedQuestion?.answer?.[id].username ?? ''}
-                    answer={selectedQuestion?.answer?.[id].answer ?? ''}
-                    timestamp={selectedQuestion?.answer?.[id].created_at ?? ''}
+                    key={response.id}
+                    username={response.username ?? ''}
+                    answer={response.response ?? ''}
+                    timestamp={response.createdAt ?? ''}
                   />
                 ))}
               </div>
@@ -181,6 +193,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
                   classNames="w-full sm:w-1/2 border-solid border-text dark:border-secondary border-[0.1rem] border-b-[0.1rem] rounded-full px-6"
                   placeholder={isModerator ? 'Enter a question or topic...' : 'Enter your answer or opinion...'}
                   required
+                  value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                 />
                 <Button variant="SECONDARY" classNames="dark:bg-transparent dark:border-secondary">
