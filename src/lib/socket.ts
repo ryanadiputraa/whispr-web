@@ -34,6 +34,7 @@ export interface ServerToClientEvents {
   joined: (data: { isModerator: boolean; questions: Question[] }) => void;
   question: (data: { question: Question }) => void;
   answer: (data: { answer: Answer }) => void;
+  end: () => void;
 }
 
 export interface ClientToServerEvents {
@@ -41,6 +42,7 @@ export interface ClientToServerEvents {
   leave: (data: { roomId: string; userId: string }) => void;
   question: (data: QuestionDTO) => void;
   answer: (data: AnswerDTO) => void;
+  end: (data: { roomId: string; userId: string }) => void;
 }
 
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(URL);

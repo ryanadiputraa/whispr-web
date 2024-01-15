@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FormEvent, useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -27,6 +27,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
   const { main } = useContext(AppContext);
   const { toggleToast } = useMainAction();
   const pathname = usePathname();
+  const router = useRouter();
   useConnection();
 
   const [username, setUsername] = useState(searchParams.username);
@@ -39,6 +40,11 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
 
   const [questions, setQuestions] = useState<{ [id: string]: Question }>({});
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(questions[0] ?? null);
+
+  const endMeet = () => {
+    socket.emit('end', { roomId: params.meetId, userId: username });
+    router.push('/dashboard');
+  };
 
   const onShare = () => {
     toggleToast({ isOpen: true, type: 'INFO', message: 'Meet link copied!' });
@@ -73,15 +79,9 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
 
   useEffect(() => {
     if (!username) return;
-    const handleError = ({ message }: { message: string }) => {
-      setError({ message });
-    };
-    const joinSession = () => {
-      socket.emit('join', { roomId: params.meetId, userId: username });
-    };
-    const leaveSession = () => {
-      socket.emit('leave', { roomId: params.meetId, userId: username });
-    };
+    const handleError = ({ message }: { message: string }) => setError({ message });
+    const joinSession = () => socket.emit('join', { roomId: params.meetId, userId: username });
+    const leaveSession = () => socket.emit('leave', { roomId: params.meetId, userId: username });
     const handleQuestion = (question: Question) => {
       if (isModerator) setSelectedQuestion(question);
       setQuestions((prev) => ({
@@ -94,20 +94,14 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
         ...prev,
         [answer.questionId]: {
           ...prev[answer.questionId],
-          answer: {
-            ...prev[answer.questionId].responses,
-            [answer.id]: answer,
-          },
+          responses: [...(prev[answer.questionId].responses ?? []), answer],
         },
       }));
       setSelectedQuestion((prev) =>
         prev
           ? {
               ...prev,
-              answer: {
-                ...prev.responses,
-                [answer.id]: answer,
-              },
+              responses: [...(prev.responses ?? []), answer],
             }
           : null
       );
@@ -129,6 +123,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
       }
       setQuestions(data);
     });
+    socket.on('end', () => setError({ message: 'Meet has ended' }));
     socket.on('question', ({ question }) => handleQuestion(question));
     socket.on('answer', ({ answer }) => handleAnswer(answer));
     socket.on('error', handleError);
@@ -136,12 +131,13 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
 
     return () => {
       leaveSession();
-      socket.on('joined', () => ({ isModerator }: { isModerator: boolean }) => {
+      socket.off('end', () => setError({ message: 'Meet has ended' }));
+      socket.off('joined', () => ({ isModerator }: { isModerator: boolean }) => {
         setIsJoined(true);
         setIsModerator(isModerator);
       });
-      socket.on('question', ({ question }) => handleQuestion(question));
-      socket.on('answer', ({ answer }) => handleAnswer(answer));
+      socket.off('question', ({ question }) => handleQuestion(question));
+      socket.off('answer', ({ answer }) => handleAnswer(answer));
       socket.off('error', handleError);
       window.removeEventListener('beforeunload', leaveSession);
     };
@@ -184,6 +180,11 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
             </div>
             {(isModerator || selectedQuestion?.id) && (
               <form className="w-full flex justify-center items-center gap-4" onSubmit={onSubmit}>
+                {isModerator && (
+                  <Button type="button" classNames="uppercase font-bold" variant="DANGER" onClick={endMeet}>
+                    End Meet
+                  </Button>
+                )}
                 <CopyToClipboard text={window.location.host + pathname} onCopy={onShare}>
                   <Button type="button" classNames="uppercase font-bold" variant="ACCENT">
                     Share

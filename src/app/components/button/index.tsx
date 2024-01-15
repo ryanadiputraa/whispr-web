@@ -5,7 +5,7 @@ interface Props {
   children?: React.ReactNode;
   style?: CSSProperties;
   type?: 'submit' | 'reset' | 'button';
-  variant?: 'PRIMARY' | 'SECONDARY' | 'ACCENT';
+  variant?: 'PRIMARY' | 'SECONDARY' | 'ACCENT' | 'DANGER';
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   isLoading?: boolean;
@@ -26,6 +26,7 @@ export function Button({
     PRIMARY: 'bg-background-dark text-text-dark',
     SECONDARY: 'bg-background text-text border-2 border-background-dark',
     ACCENT: 'bg-accent dark:bg-accent-dark text-text-dark dark:text-text',
+    DANGER: 'bg-red-400 text-text-dark dark:text-text',
   };
 
   return (
