@@ -133,7 +133,7 @@ export default function Register(): React.ReactNode {
         </form>
         <span className="self-end mt-12">
           Already have an account?{' '}
-          <Link className="text-blue-700 font-bold" href={'/dashboard/login'}>
+          <Link className="text-blue-700 font-bold" href={'/auth/login'}>
             Sign In
           </Link>{' '}
           here

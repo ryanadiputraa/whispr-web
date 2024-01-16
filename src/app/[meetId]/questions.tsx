@@ -11,11 +11,18 @@ interface Props {
   questions: { [id: string]: Question };
   selectedQuestion: Question | null;
   setSelectedQuestion: Dispatch<SetStateAction<Question | null>>;
+  unread: { [questionId: string]: number };
+  setUnread: Dispatch<SetStateAction<{ [questionId: string]: number }>>;
 }
 
-export function Questions({ questions, selectedQuestion, setSelectedQuestion }: Readonly<Props>) {
+export function Questions({ questions, selectedQuestion, setSelectedQuestion, unread, setUnread }: Readonly<Props>) {
   const { main } = useContext(AppContext);
   const [isMount, setIsMount] = useState(false);
+
+  const onSelectQuestion = (id: string) => {
+    setSelectedQuestion(questions[id]);
+    setUnread((prev) => ({ ...prev, [id]: 0 }));
+  };
 
   useLayoutEffect(() => {
     setIsMount(true);
@@ -42,7 +49,12 @@ export function Questions({ questions, selectedQuestion, setSelectedQuestion }: 
                 : ''
             }
           >
-            <button className="inline-block truncate w-40 py-2 px-2" onClick={() => setSelectedQuestion(questions[id])}>
+            <button className="relative inline-block truncate w-40 py-2 px-2" onClick={() => onSelectQuestion(id)}>
+              {unread[id] ? (
+                <span className="absolute right-0 top-2 bg-red-400 rounded-full px-[0.35rem] pb-[0.125rem] grid place-items-center text-xs font-bold">
+                  {unread[id]}
+                </span>
+              ) : null}
               {questions[id].question}
             </button>
           </li>

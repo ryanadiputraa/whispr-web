@@ -40,6 +40,7 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
 
   const [questions, setQuestions] = useState<{ [id: string]: Question }>({});
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(questions[0] ?? null);
+  const [unread, setUnread] = useState<{ [questionId: string]: number }>({});
 
   const endMeet = () => {
     socket.emit('end', { roomId: params.meetId, userId: username });
@@ -105,6 +106,12 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
             }
           : null
       );
+      if (selectedQuestion?.id !== answer.questionId) {
+        setUnread((prev) => ({
+          ...prev,
+          [answer.questionId]: prev[answer.questionId] ? prev[answer.questionId] + 1 : 1,
+        }));
+      }
     };
 
     joinSession();
@@ -153,6 +160,8 @@ export default function MeetSession({ params, searchParams }: Readonly<Props>) {
             questions={questions}
             selectedQuestion={selectedQuestion}
             setSelectedQuestion={setSelectedQuestion}
+            unread={unread}
+            setUnread={setUnread}
           />
           <div className="flex flex-col justify-between px-[4%] sm:px-4 pt-6 pb-3 w-full">
             <div className="max-h-[90vh] overflow-y-auto">
