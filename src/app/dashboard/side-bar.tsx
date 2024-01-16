@@ -46,7 +46,7 @@ export default function SideBar() {
   }, [setIsMount]);
 
   return (
-    <nav className="hidden sm:inline-block w-56 h-screen shadow-sm shadow-secondary-dark dark:shadow-secondary sm:shadow-secondary-dark py-4">
+    <nav className="hidden sm:flex flex-col w-56 h-screen shadow-sm shadow-secondary-dark dark:shadow-secondary sm:shadow-secondary-dark pt-4">
       <Link href={'/dashboard'} className="flex justify-center items-center gap-4">
         <Image
           width={24}
@@ -64,33 +64,61 @@ export default function SideBar() {
       >
         <span className=" scale-150">+</span> New Meeting
       </Button>
-      <ul className="mt-12">
-        {MENU_LIST.map((menu) => (
-          <li
-            key={menu.href}
-            className={
-              active === menu.href
-                ? 'bg-gradient-to-r from-accent-transparent dark:from-accent-dark-transparent to-white border-l-2 border-accent dark:border-accent-dark'
-                : ''
-            }
-          >
-            <Link
-              className="w-full flex items-center gap-4 px-4 py-3 font-medium"
-              href={menu.href}
-              onClick={() => setActive(menu.href)}
+      <div className="flex flex-col flex-grow justify-between">
+        <ul className="mt-12">
+          {MENU_LIST.slice(0, -1).map((menu) => (
+            <li
+              key={menu.href}
+              className={
+                active === menu.href
+                  ? 'bg-gradient-to-r from-accent-transparent dark:from-accent-dark-transparent to-white border-l-2 border-accent dark:border-accent-dark'
+                  : ''
+              }
             >
-              <Image
-                priority
-                width={16}
-                height={16}
-                src={isMount && main.theme === 'light' ? menu.ico : menu.icoDark}
-                alt={menu.name}
-              />
-              {menu.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+              <Link
+                className="w-full flex items-center gap-4 px-4 py-3 font-medium"
+                href={menu.href}
+                onClick={() => setActive(menu.href)}
+              >
+                <Image
+                  priority
+                  width={16}
+                  height={16}
+                  src={isMount && main.theme === 'light' ? menu.ico : menu.icoDark}
+                  alt={menu.name}
+                />
+                {menu.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div
+          className={
+            active === MENU_LIST[MENU_LIST.length - 1].href
+              ? 'bg-gradient-to-r from-accent-transparent dark:from-accent-dark-transparent to-white border-l-2 border-accent dark:border-accent-dark'
+              : ''
+          }
+        >
+          <Link
+            className="w-full flex items-center gap-4 px-4 py-3 font-medium"
+            href={MENU_LIST[MENU_LIST.length - 1].href}
+            onClick={() => setActive(MENU_LIST[MENU_LIST.length - 1].href)}
+          >
+            <Image
+              priority
+              width={16}
+              height={16}
+              src={
+                isMount && main.theme === 'light'
+                  ? MENU_LIST[MENU_LIST.length - 1].ico
+                  : MENU_LIST[MENU_LIST.length - 1].icoDark
+              }
+              alt={MENU_LIST[MENU_LIST.length - 1].name}
+            />
+            {MENU_LIST[MENU_LIST.length - 1].name}
+          </Link>
+        </div>
+      </div>
     </nav>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 import { useMainAction } from '@/context/actions/main';
 import axios, { DataAPIResponse, ErrorAPIResponse } from '@/lib/axios';
@@ -40,6 +40,8 @@ export function useAuth() {
     setCookie('auth', tokens, { expires: expiresTime });
   };
 
+  const clearJWTTokens = () => deleteCookie('auth');
+
   const login = async (payload: LoginPayload): Promise<ErrorAPIResponse> => {
     try {
       const resp = await axios.post<DataAPIResponse<JWTTokens>>('/auth/login', payload);
@@ -63,5 +65,5 @@ export function useAuth() {
     }
   };
 
-  return { jwtTokens, login, register };
+  return { jwtTokens, login, register, clearJWTTokens };
 }
