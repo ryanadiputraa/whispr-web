@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 
 import { useMainAction } from '@/context/actions/main';
+import { useUserAction } from '@/context/actions/user';
+import { Meet } from '@/context/reducers/user';
 import axios, { DataAPIResponse } from '@/lib/axios';
 import { socket } from '@/lib/socket';
 import { catchAxiosError } from '@/utils/error';
@@ -11,6 +13,21 @@ import { useAuth } from './useAuth';
 export function useMeet() {
   const { jwtTokens } = useAuth();
   const { toggleToast } = useMainAction();
+  const { setUserMeets } = useUserAction();
+
+  const getUserMeets = async (): Promise<void> => {
+    try {
+      const resp = await axios.get<DataAPIResponse<Meet[]>>('/api/meets', {
+        headers: {
+          Authorization: `Bearer ${jwtTokens.access_token}`,
+        },
+      });
+      setUserMeets(resp.data.data);
+    } catch (error) {
+      const err = catchAxiosError(error);
+      toggleToast({ type: 'ERROR', isOpen: true, message: err.message });
+    }
+  };
 
   const createMeetingSession = async (): Promise<string | undefined> => {
     try {
@@ -26,7 +43,7 @@ export function useMeet() {
     }
   };
 
-  return { createMeetingSession };
+  return { getUserMeets, createMeetingSession };
 }
 
 export function useConnection() {

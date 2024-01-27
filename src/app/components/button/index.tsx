@@ -25,7 +25,7 @@ export function Button({
   const variatnStyle = {
     PRIMARY: 'bg-background-dark text-text-dark',
     SECONDARY: 'bg-background text-text border-2 border-background-dark',
-    ACCENT: 'bg-accent dark:bg-accent-dark text-text dark:text-text-dark',
+    ACCENT: 'bg-accent dark:bg-accent-dark text-text-dark dark:text-text',
     DANGER: 'bg-red-400 text-text dark:text-text-dark',
   };
 

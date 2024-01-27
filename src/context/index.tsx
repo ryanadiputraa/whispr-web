@@ -28,6 +28,7 @@ const initialState: InitialState = {
       firstName: '',
       lastName: '',
     },
+    meets: [],
   },
 };
 

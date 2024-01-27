@@ -2,8 +2,9 @@
 
 import { useContext, useEffect } from 'react';
 
-import { useUser } from '@/hooks/useUser';
 import { AppContext } from '@/context';
+import { useMeet } from '@/hooks/useMeet';
+import { useUser } from '@/hooks/useUser';
 
 export default function DashboardWrapper({
   children,
@@ -12,9 +13,11 @@ export default function DashboardWrapper({
 }>) {
   const { user } = useContext(AppContext);
   const { getUserData } = useUser();
+  const { getUserMeets } = useMeet();
 
   useEffect(() => {
     if (!user.data.id) getUserData();
+    getUserMeets();
   }, [user.data.id]); // eslint-disable-line
 
   return children;

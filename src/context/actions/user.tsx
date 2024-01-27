@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 
 import { AppContext } from '..';
-import { User } from '../reducers/user';
+import { Meet, User } from '../reducers/user';
 
 export const useUserAction = () => {
   const { userDispatch } = useContext(AppContext);
@@ -11,6 +11,9 @@ export const useUserAction = () => {
   const setUserData = (data: User) => {
     userDispatch({ type: 'SET_USER_DATA', data });
   };
+  const setUserMeets = (data: Meet[]) => {
+    userDispatch({ type: 'SET_USER_MEET', data });
+  };
 
-  return { setUserData };
+  return { setUserData, setUserMeets };
 };

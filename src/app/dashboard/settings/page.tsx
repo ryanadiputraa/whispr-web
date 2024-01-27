@@ -25,7 +25,7 @@ export default function Settings() {
         <span>Use dark theme</span>
         <input className="w-4 h-4" type="checkbox" checked={main.theme === 'dark'} onChange={() => toggleTheme()} />
       </div>
-      <Button classNames="mt-8 font-bold self-end text-text dark:text-text-dark" variant="DANGER" onClick={signOut}>
+      <Button classNames="mt-8 font-bold self-end" variant="DANGER" onClick={signOut}>
         Sign Out
       </Button>
     </div>
