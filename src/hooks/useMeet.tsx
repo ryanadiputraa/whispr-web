@@ -29,13 +29,17 @@ export function useMeet() {
     }
   };
 
-  const createMeetingSession = async (): Promise<string | undefined> => {
+  const createMeetingSession = async (name: string): Promise<string | undefined> => {
     try {
-      const resp = await axios.post<DataAPIResponse<string>>('/api/meets', null, {
-        headers: {
-          Authorization: `Bearer ${jwtTokens.access_token}`,
-        },
-      });
+      const resp = await axios.post<DataAPIResponse<string>>(
+        '/api/meets',
+        { name },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtTokens.access_token}`,
+          },
+        }
+      );
       return resp.data.data;
     } catch (error) {
       const err = catchAxiosError(error);

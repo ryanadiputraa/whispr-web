@@ -3,11 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useLayoutEffect, useState } from 'react';
+import { FormEvent, useContext, useLayoutEffect, useState } from 'react';
 
 import { AppContext } from '@/context';
 import { useMeet } from '@/hooks/useMeet';
 import { Button } from '../components/button';
+import { CreateMeetPrompt } from './create-meet-prompt';
 
 const MENU_LIST = [
   {
@@ -33,10 +34,15 @@ export default function SideBar() {
   const [isMount, setIsMount] = useState(false);
   const [active, setActive] = useState<string>(pathname);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPromptOpen, setIsPromptOpen] = useState(false);
+  const [meetName, setMeetName] = useState('');
 
-  const onNewMeeting = async () => {
+  const onStartMeet = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsLoading(true);
-    const sessionId = await createMeetingSession();
+    const sessionId = await createMeetingSession(meetName);
+    setMeetName('');
+    setIsPromptOpen(false);
     setIsLoading(false);
     if (sessionId) router.push(`/${sessionId}?username=${user.data.id}`);
   };
@@ -60,7 +66,7 @@ export default function SideBar() {
         variant="ACCENT"
         classNames="rounded-md flex gap-2 mt-12 mx-auto py-3 px-6 font-medium"
         isLoading={isLoading}
-        onClick={onNewMeeting}
+        onClick={() => setIsPromptOpen(true)}
       >
         <span className=" scale-150">+</span> New Meeting
       </Button>
@@ -119,6 +125,7 @@ export default function SideBar() {
           </Link>
         </div>
       </div>
+      <CreateMeetPrompt isOpen={isPromptOpen} setMeetName={setMeetName} onStart={onStartMeet} />
     </nav>
   );
 }
