@@ -1,6 +1,6 @@
 # Whispr
 
-Silent meet web application. Using websocket to collaborate ideas on realtime in meeting session.
+Silent meet web application. Collaborate ideas in realtime during meeting session.
 
 ## Development
 
